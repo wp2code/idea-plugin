@@ -78,7 +78,7 @@ public class PluginSettingsConfigurable implements Configurable {
     private DictTablePanel dictResourcePanel;
     
     private DictTablePanel dictPermissionPanel;
-    
+    private JPanel httpConfigGroup;
     @Nls(capitalization = Nls.Capitalization.Title)
     @Override
     public String getDisplayName() {
@@ -206,7 +206,7 @@ public class PluginSettingsConfigurable implements Configurable {
         httpApiRow.add(httpCodeApiField, BorderLayout.CENTER);
         httpApiRow.add(testHttpBtn, BorderLayout.EAST);
         httpHeadersPanel = new HttpHeadersPanel();
-        final JPanel httpConfigGroup = new JPanel(new BorderLayout(0, 4));
+        httpConfigGroup = new JPanel(new BorderLayout(0, 4));
         httpConfigGroup.setBorder(BorderFactory.createTitledBorder("HTTP 配置"));
         httpConfigGroup.add(httpApiRow, BorderLayout.NORTH);
         httpConfigGroup.add(httpHeadersPanel, BorderLayout.CENTER);
@@ -380,6 +380,7 @@ public class PluginSettingsConfigurable implements Configurable {
         templateContentArea.setText(currentTemplate.getTemplateContent());
         templateContentArea.setCaretPosition(0);
         httpHeadersPanel.populateFromTemplate(currentTemplate);
+        httpConfigGroup.setVisible(currentTemplate.getDefaultCodeMode() == 1);
         //        extConfigPanel.populateFromTemplate(currentTemplate);
     }
     
