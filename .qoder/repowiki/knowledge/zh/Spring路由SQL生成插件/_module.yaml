@@ -1,0 +1,29 @@
+schema_version: 1
+module_path: ""
+title: Spring路由SQL生成插件
+scope:
+    - .gitignore
+    - README.md
+    - build.gradle.kts
+    - gradle.properties
+    - gradlew.bat
+    - settings.gradle.kts
+    - src/
+    - .intellijPlatform\self-update.lock
+    - .kotlin\errors\errors-1781767800541.log
+    - gradle\wrapper\gradle-wrapper.jar
+    - gradle\wrapper\gradle-wrapper.properties
+    - gradlew
+    - src\main\java\com\github\example\MyAction.java
+    - src\main\java\com\github\example\action\GenerateMethodSqlAction.java
+    - src\main\java\com\github\example\action\GenerateSqlAction.java
+    - src\main\java\com\github\example\config\SqlTemplateConfig.java
+    - src\main\java\com\github\example\config\SqlTemplateSettingsConfigurable.java
+    - src\main\java\com\github\example\generator\SqlGenerator.java
+    - src\main\java\com\github\example\model\RouteInfo.java
+    - src\main\java\com\github\example\ui\SqlGenerateDialog.java
+    - src\main\java\com\github\example\util\SpringAnnotationUtils.java
+    - src\main\resources\META-INF\plugin.xml
+source_files: []
+depends_on: []
+related_to: []

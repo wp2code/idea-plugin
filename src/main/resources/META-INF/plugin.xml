@@ -1,0 +1,61 @@
+<idea-plugin>
+    <id>com.lsy.idea.idea-plugin</id>
+    <name>Api2Sql</name>
+    <vendor>lsy</vendor>
+    <description><![CDATA[
+    <h3>Api2Sql — Spring Controller 接口权限 SQL 生成器</h3>
+    <p>IntelliJ IDEA 插件，用于解析 Spring Controller 接口并批量生成权限 INSERT SQL 脚本，大幅提升权限系统开发效率。</p>
+    <br/>
+    <b>核心功能：</b>
+    <ul>
+        <li><b>智能解析</b>：右键 Controller 类或方法，自动提取路由地址、请求方式、接口注释等元数据</li>
+        <li><b>模板管理</b>：SQL 模板可视化配置、本地 SQLite 持久化存储，支持导入 / 导出（JSON 格式），实现多项目 / 多环境共享复用</li>
+        <li><b>字典管理</b>：资源类型、权限类型统一字典维护，支持增删改查，下拉选项实时更新</li>
+        <li><b>双模式资源编码</b>：支持手动录入与 HTTP 接口拉取两种模式，满足不同业务场景</li>
+        <li><b>国际化支持</b>：接口级独立 i18n 标识手动配置，无模板默认值，支持清空为空，模板切换不影响接口配置</li>
+        <li><b>批量生成与导出</b>：一键生成全部 SQL，支持预览、一键复制到剪贴板、导出 .sql 文件三种输出方式</li>
+    </ul>
+    <br/>
+    <b>使用方式：</b>
+    <ol>
+        <li>在代码编辑器或项目视图树中，右键选中 Spring Controller 类或方法</li>
+        <li>选择菜单项 <b>「Api2Sql」</b></li>
+        <li>配置接口参数（资源编码、资源类型、权限类型等），点击「生成脚本」</li>
+    </ol>
+    <br/>
+    <p><b>兼容：</b>IntelliJ IDEA 2021.3+ &nbsp;|&nbsp; Spring Boot 2.x / 3.x</p>
+    ]]></description>
+    
+    <depends>com.intellij.modules.platform</depends>
+    <depends>com.intellij.modules.java</depends>
+    
+    <extensions defaultExtensionNs="com.intellij">
+        <!-- 通知组注册 -->
+        <notificationGroup id="Api2Sql" displayType="BALLOON"/>
+        
+        <!-- SQLite 数据库管理服务（项目级别，每个项目独立数据库） -->
+        <projectService serviceImplementation="com.lsy.idea.db.DatabaseManager"/>
+        
+        <!-- 插件启动时初始化数据库 -->
+        <postStartupActivity implementation="com.lsy.idea.config.PluginStartupActivity"/>
+        
+        <!-- Settings → Tools → Api2Sql -->
+        <applicationConfigurable
+            parentId="tools"
+            instance="com.lsy.idea.config.PluginSettingsConfigurable"
+            id="com.lsy.idea.config.PluginSettingsConfigurable"
+            displayName="Api2Sql"/>
+    </extensions>
+    
+    <actions>
+        <!-- 右键 Controller 类或方法 → 自动判断生成权限 SQL -->
+        <action id="com.lsy.idea.GenerateSqlAction"
+            class="com.lsy.idea.action.GenerateSqlAction"
+            text="Api2Sql"
+            description="光标在方法上时解析单个接口；在类上时解析整个 Controller接口 批量生成权限 INSERT SQL"
+            icon="/icons/generateSql.svg">
+            <add-to-group group-id="EditorPopupMenu" anchor="last"/>
+            <add-to-group group-id="ProjectViewPopupMenu" anchor="last"/>
+        </action>
+    </actions>
+</idea-plugin>

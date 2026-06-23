@@ -1,0 +1,36 @@
+# 知识卡导出索引文件
+schema_version: 1
+locale: zh-CN
+branch: Q0DeR-MaG1C-BrAnCh-Fo2-NoN-GiT-Or-No-C0MmIt
+exported_at: "2026-06-18T09:26:23Z"
+modules:
+    "":
+        dir_name: Spring路由SQL生成插件
+        title: Spring路由SQL生成插件
+        scope:
+            - .gitignore
+            - README.md
+            - build.gradle.kts
+            - gradle.properties
+            - gradlew.bat
+            - settings.gradle.kts
+            - src/
+            - .intellijPlatform\self-update.lock
+            - .kotlin\errors\errors-1781767800541.log
+            - gradle\wrapper\gradle-wrapper.jar
+            - gradle\wrapper\gradle-wrapper.properties
+            - gradlew
+            - src\main\java\com\github\example\MyAction.java
+            - src\main\java\com\github\example\action\GenerateMethodSqlAction.java
+            - src\main\java\com\github\example\action\GenerateSqlAction.java
+            - src\main\java\com\github\example\config\SqlTemplateConfig.java
+            - src\main\java\com\github\example\config\SqlTemplateSettingsConfigurable.java
+            - src\main\java\com\github\example\generator\SqlGenerator.java
+            - src\main\java\com\github\example\model\RouteInfo.java
+            - src\main\java\com\github\example\ui\SqlGenerateDialog.java
+            - src\main\java\com\github\example\util\SpringAnnotationUtils.java
+            - src\main\resources\META-INF\plugin.xml
+        source_files: []
+        children: []
+        depends_on: []
+        related_to: []

@@ -1,0 +1,20 @@
+# Build output
+build/
+out/
+
+# Gradle
+.gradle/
+local.properties
+
+# IntelliJ Platform cache
+.intellijPlatform/
+
+# IDE
+.idea/
+*.iml
+*.iws
+*.ipr
+
+# OS
+.DS_Store
+Thumbs.db
