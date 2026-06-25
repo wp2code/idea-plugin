@@ -3,6 +3,7 @@
     <name>Api2Sql</name>
     <vendor>lsy</vendor>
     <description><![CDATA[
+    Api2Sql is an IntelliJ IDEA plugin for generating permission INSERT SQL scripts from Spring Controller interfaces.
     <h3>Api2Sql — Spring Controller 接口权限 SQL 生成器</h3>
     <p>IntelliJ IDEA 插件，用于解析 Spring Controller 接口并批量生成权限 INSERT SQL 脚本，大幅提升权限系统开发效率。</p>
     <br/>
