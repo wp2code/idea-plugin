@@ -23,7 +23,7 @@
         <li>配置接口参数（资源编码、资源类型、权限类型等），点击「生成脚本」</li>
     </ol>
     <br/>
-    <p><b>兼容：</b>IntelliJ IDEA 2021.3+ &nbsp;|&nbsp; Spring Boot 2.x / 3.x</p>
+    <p><b>兼容：</b>IntelliJ IDEA 2025.1 ~ 2025.3.x &nbsp;|&nbsp; Spring Boot 2.x / 3.x</p>
     ]]></description>
     
     <depends>com.intellij.modules.platform</depends>
