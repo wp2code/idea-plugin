@@ -1,11 +1,3 @@
-/*
- * Copyright 2025 深圳曼顿科技有限公司 All Rights Reserved.
- *
- * Unauthorized copying of this file, via any medium is strictly prohibited
- * Proprietary and confidential
- *
- * Written by 软件研究中心（深圳曼顿科技有限公司）
- */
 package com.lsy.idea.util;
 
 import com.intellij.openapi.ui.Messages;
