@@ -24,6 +24,8 @@ jobs:
 
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
+        env:
+          GRADLE_DISTRIBUTIONS_BASE_URL: https://mirrors.cloud.tencent.com/gradle/
 
       - name: Build and test
         run: ./gradlew build -x test
