@@ -30,7 +30,6 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.sql.Connection;
 import java.util.List;
-import java.util.Objects;
 import javax.swing.*;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.AbstractTableModel;
@@ -71,14 +70,14 @@ public class PluginSettingsConfigurable implements Configurable {
     
     private JButton testHttpBtn;
     
-    private JPanel httpApiRow;
-    
     private SqlTemplate currentTemplate;
     
     private DictTablePanel dictResourcePanel;
     
     private DictTablePanel dictPermissionPanel;
+    
     private JPanel httpConfigGroup;
+    
     @Nls(capitalization = Nls.Capitalization.Title)
     @Override
     public String getDisplayName() {
@@ -135,16 +134,24 @@ public class PluginSettingsConfigurable implements Configurable {
         
         for (JButton btn : new JButton[] {addBtn, saveBtn, deleteBtn, exportBtn, importBtn}) {
             btn.setAlignmentX(Component.CENTER_ALIGNMENT);
-            btnPanel.add(btn);
-            btnPanel.add(Box.createVerticalStrut(4));
+            btn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         }
-        
+        btnPanel.add(addBtn);
+        btnPanel.add(Box.createVerticalStrut(4));
+        btnPanel.add(importBtn);
+        //左边面板
         JPanel leftPanel = new JPanel(new BorderLayout(4, 4));
         leftPanel.add(listScroll, BorderLayout.CENTER);
         leftPanel.add(btnPanel, BorderLayout.SOUTH);
-        
-        // ---- 右侧：模板编辑表单 ----
+        //右边边面板
+        JPanel rightPanel = new JPanel(new BorderLayout(4, 0));
+        rightPanel.setPreferredSize(new Dimension(400, 500));
         JPanel formPanel = new JPanel(new GridBagLayout());
+        JPanel optBtnPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 4, 2));
+        optBtnPanel.add(saveBtn);
+        optBtnPanel.add(deleteBtn);
+        optBtnPanel.add(exportBtn);
+        rightPanel.add(optBtnPanel, BorderLayout.NORTH);
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = JBUI.insets(4);
         gbc.fill = GridBagConstraints.HORIZONTAL;
@@ -201,15 +208,16 @@ public class PluginSettingsConfigurable implements Configurable {
         // ---- HTTP 配置区（地址 + 测试按钮 + 请求头，归组）----
         httpCodeApiField = new JTextField();
         testHttpBtn = new JButton("测试");
-        httpApiRow = new JPanel(new BorderLayout(4, 0));
+        final JPanel httpApiRow = new JPanel(new BorderLayout(0, 0));
         httpApiRow.add(new JLabel("地址："), BorderLayout.WEST);
         httpApiRow.add(httpCodeApiField, BorderLayout.CENTER);
         httpApiRow.add(testHttpBtn, BorderLayout.EAST);
         httpHeadersPanel = new HttpHeadersPanel();
-        httpConfigGroup = new JPanel(new BorderLayout(0, 4));
+        httpConfigGroup = new JPanel(new BorderLayout(0, 0));
         httpConfigGroup.setBorder(BorderFactory.createTitledBorder("HTTP 配置"));
         httpConfigGroup.add(httpApiRow, BorderLayout.NORTH);
         httpConfigGroup.add(httpHeadersPanel, BorderLayout.CENTER);
+        //        httpConfigGroup.setPreferredSize(new Dimension(200, 300));
         httpConfigGroup.setVisible(false);
         testHttpBtn.addActionListener(
                 e -> CommUtil.doTestHttpRequest(httpCodeApiField.getText().trim(), httpHeadersPanel.getHeaders(), testHttpBtn, mainPanel));
@@ -218,8 +226,8 @@ public class PluginSettingsConfigurable implements Configurable {
         gbc.gridy = row;
         gbc.weightx = 1;
         gbc.weighty = 0;
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-        gbc.anchor = GridBagConstraints.NORTH;
+        gbc.fill = GridBagConstraints.BOTH;
+        gbc.anchor = GridBagConstraints.NORTHWEST;
         formPanel.add(httpConfigGroup, gbc);
         // 模板内容
         row++;
@@ -287,7 +295,7 @@ public class PluginSettingsConfigurable implements Configurable {
                         };
                     }
                 };
-                JScrollPane scrollPane = new JScrollPane(new JTable(tableModel));
+                JBScrollPane scrollPane = new JBScrollPane(new JTable(tableModel));
                 scrollPane.setPreferredSize(new Dimension(500, 300));
                 JOptionPane.showMessageDialog(mainPanel, scrollPane, "变量说明", JOptionPane.INFORMATION_MESSAGE);
             }
@@ -309,9 +317,9 @@ public class PluginSettingsConfigurable implements Configurable {
             loadSelectedTemplate();
         };
         templateList.addListSelectionListener(selectionListener);
-        
+        rightPanel.add(new JBScrollPane(formPanel), BorderLayout.CENTER);
         // ---- 分割面板 ----
-        JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, leftPanel, new JScrollPane(formPanel));
+        JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, leftPanel, rightPanel);
         splitPane.setDividerLocation(150);
         splitPane.setDividerSize(5);
         panel.add(splitPane, BorderLayout.CENTER);
@@ -319,33 +327,13 @@ public class PluginSettingsConfigurable implements Configurable {
     }
     
     private void updateHttpModeVisibility(boolean httpMode) {
-        Container httpConfigGroup = httpApiRow.getParent();
-        if (httpConfigGroup != null) {
-            httpConfigGroup.setVisible(httpMode);
-        }
+        httpConfigGroup.setVisible(httpMode);
         // 逐级刷新布局
-        Container c = httpConfigGroup != null ? httpConfigGroup.getParent() : mainPanel;
+        Container c = httpConfigGroup.getParent();
         while (c != null) {
             c.revalidate();
             c.repaint();
             c = c.getParent();
-        }
-        
-        // 让顶层窗口重新 pack，自动扩展/收缩高度以适应内容
-        Window window = SwingUtilities.getWindowAncestor(httpConfigGroup != null ? httpConfigGroup : Objects.requireNonNull(mainPanel));
-        if (window != null) {
-            // 记住当前宽度和位置，pack 后恢复
-            int curWidth = window.getWidth();
-            Point curLoc = window.getLocation();
-            window.pack();
-            Dimension packed = window.getSize();
-            // 限制最大高度不超过屏幕可用高度
-            Rectangle screenBounds = window.getGraphicsConfiguration().getBounds();
-            int maxH = screenBounds.height - 80;
-            int finalH = Math.min(packed.height, maxH);
-            int finalW = Math.max(curWidth, packed.width);
-            window.setSize(finalW, finalH);
-            window.setLocation(curLoc);
         }
     }
     
@@ -391,6 +379,7 @@ public class PluginSettingsConfigurable implements Configurable {
         updaterIdField.setText("");
         httpCodeApiField.setText("");
         modeManualBtn.setSelected(true);
+        httpConfigGroup.setVisible(false);
         templateContentArea.setText("");
         httpHeadersPanel.clear();
     }
@@ -436,8 +425,9 @@ public class PluginSettingsConfigurable implements Configurable {
         currentTemplate.setDefaultCodeMode(modeHttpBtn.isSelected() ? 1 : 0);
         httpHeadersPanel.applyToTemplate(currentTemplate);
         templateDao.updateTemplate(currentTemplate);
+        final String templateName = currentTemplate.getTemplateName();
         refreshTemplateList();
-        templateList.setSelectedValue(currentTemplate.getTemplateName(), true);
+        templateList.setSelectedValue(templateName, true);
         Messages.showInfoMessage(mainPanel, "模板保存成功", "成功");
     }
     
@@ -512,7 +502,7 @@ public class PluginSettingsConfigurable implements Configurable {
         JPanel panel = new JPanel(new BorderLayout(8, 8));
         panel.setBorder(BorderFactory.createEmptyBorder(8, 8, 8, 8));
         
-        JBTabbedPane dictTabs = new JBTabbedPane();
+        JBTabbedPane dictTabs = new JBTabbedPane(SwingConstants.LEFT);
         dictTabs.addTab("资源类型", buildDictSubPanel("resource"));
         dictTabs.addTab("权限类型", buildDictSubPanel("permission"));
         

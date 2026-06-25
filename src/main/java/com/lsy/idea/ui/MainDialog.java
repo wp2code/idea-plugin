@@ -64,7 +64,6 @@ public class MainDialog extends DialogWrapper {
         super(project);
         this.project = project;
         this.interfaces = interfaces;
-        
         if (project != null) {
             DatabaseManager db = DatabaseManager.getInstance(project);
             if (db != null && db.getConnection() != null) {
@@ -120,28 +119,11 @@ public class MainDialog extends DialogWrapper {
         templateCombo.setPreferredSize(new Dimension(220, 26));
         templateCombo.addActionListener(e -> onTemplateSelected());
         bar.add(templateCombo);
+        JButton tempBtn = new JButton("模板操作");
+        tempBtn.addActionListener(e -> showTemplateManageMenu(tempBtn));
+        bar.add(tempBtn);
         
-        ComboBox<String> actionCombo = new ComboBox<>();
-        actionCombo.setPreferredSize(new Dimension(110, 26));
-        actionCombo.addItem("模板操作");
-        actionCombo.addItem("新建模板");
-        actionCombo.addItem("编辑模板");
-        actionCombo.addItem("删除模板");
-        actionCombo.addItem("导出模板");
-        actionCombo.addItem("导入模板");
-        actionCombo.setSelectedIndex(0);
-        actionCombo.addActionListener(e -> {
-            if (e.getActionCommand().equals("comboBoxChanged")) {
-                String action = (String) actionCombo.getSelectedItem();
-                if (action != null && !action.equals("模板操作")) {
-                    onTemplateAction(action);
-                    actionCombo.setSelectedItem("模板操作");
-                }
-            }
-        });
-        bar.add(actionCombo);
-        
-        bar.add(Box.createHorizontalStrut(12));
+        //        bar.add(Box.createHorizontalStrut(12));
         
         JButton dictBtn = new JButton("字典管理");
         dictBtn.addActionListener(e -> showDictManageMenu(dictBtn));
@@ -232,25 +214,31 @@ public class MainDialog extends DialogWrapper {
         interfaceListTable.refresh();
     }
     
-    // ===================== 字典管理 =====================
-    
-    private void onTemplateAction(String action) {
-        if (action == null) {
-            return;
+    private void showTemplateManageMenu(JButton sourceBtn) {
+        JPopupMenu menu = new JPopupMenu();
+        JMenuItem addItem = new JMenuItem("新建模板");
+        JMenuItem editItem = new JMenuItem("编辑模板");
+        JMenuItem deleteItem = new JMenuItem("删除模板");
+        JMenuItem exportItem = new JMenuItem("导出模板");
+        JMenuItem downloadItem = new JMenuItem("导入模板");
+        addItem.addActionListener(e -> createNewTemplate());
+        editItem.addActionListener(e -> editCurrentTemplate());
+        deleteItem.addActionListener(e -> deleteCurrentTemplate());
+        exportItem.addActionListener(e -> exportCurrentTemplate());
+        downloadItem.addActionListener(e -> importTemplate());
+        for (JMenuItem item : List.of(addItem, editItem, deleteItem, exportItem, downloadItem)) {
+            item.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+            menu.add(item);
         }
-        switch (action) {
-            case "新建模板" -> createNewTemplate();
-            case "编辑模板" -> editCurrentTemplate();
-            case "删除模板" -> deleteCurrentTemplate();
-            case "导出模板" -> exportCurrentTemplate();
-            case "导入模板" -> importTemplate();
-        }
+        menu.show(sourceBtn, 0, sourceBtn.getHeight());
     }
     
     private void showDictManageMenu(JButton sourceBtn) {
         JPopupMenu menu = new JPopupMenu();
         JMenuItem resourceItem = new JMenuItem("资源类型字典");
+        resourceItem.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         JMenuItem permissionItem = new JMenuItem("权限类型字典");
+        permissionItem.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         resourceItem.addActionListener(e -> openDictDialog(true));
         permissionItem.addActionListener(e -> openDictDialog(false));
         menu.add(resourceItem);

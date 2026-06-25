@@ -4,6 +4,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.ui.Gray;
+import com.intellij.ui.JBColor;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.ui.table.JBTable;
 import com.intellij.util.ui.JBUI;
@@ -161,7 +162,9 @@ public class DictManageDialog extends DialogWrapper {
         fields.add(sortField, fc);
         
         // 提示
-        JLabel hint = new JLabel("<html><font color='gray' size='2'>编码和排序填整数</font></html>");
+        JLabel hint = new JLabel("编码和排序填整数");
+        hint.setForeground(JBColor.YELLOW);
+        hint.setFont(hint.getFont().deriveFont(11f));
         lc.gridx = 0;
         lc.gridy = 3;
         lc.gridwidth = 2;

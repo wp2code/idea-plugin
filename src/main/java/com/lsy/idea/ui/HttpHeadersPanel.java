@@ -28,18 +28,17 @@ public class HttpHeadersPanel extends JPanel {
     }
     
     private void buildUI() {
-        // ---- 内容面板（默认折叠） ----
         final JPanel contentPanel = new JPanel(new BorderLayout(4, 4));
         
         // 键值对表格
         headersTableModel = new HeadersTableModel();
         headersTable = new JBTable(headersTableModel);
         headersTable.setRowHeight(20);
-        headersTable.getColumnModel().getColumn(0).setPreferredWidth(150);
-        headersTable.getColumnModel().getColumn(1).setPreferredWidth(260);
+        //        headersTable.getColumnModel().getColumn(0).setPreferredWidth(150);
+        //        headersTable.getColumnModel().getColumn(1).setPreferredWidth(260);
         
         JBScrollPane tableScroll = new JBScrollPane(headersTable);
-        tableScroll.setPreferredSize(new Dimension(440, 120));
+        tableScroll.setPreferredSize(new Dimension(400, 100));
         contentPanel.add(tableScroll, BorderLayout.CENTER);
         
         // 说明标签
@@ -50,6 +49,8 @@ public class HttpHeadersPanel extends JPanel {
         JPanel btnRow = new JPanel(new FlowLayout(FlowLayout.LEFT, 4, 2));
         final JButton addRowBtn = new JButton("+ 添加请求头");
         final JButton removeRowBtn = new JButton("- 删除选中");
+        addRowBtn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        removeRowBtn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         addRowBtn.addActionListener(e -> headersTableModel.addRow("", ""));
         removeRowBtn.addActionListener(e -> {
             int row = headersTable.getSelectedRow();
