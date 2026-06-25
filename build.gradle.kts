@@ -36,6 +36,9 @@ dependencies {
     }
     // Gson JSON 处理（extConfig 序列化/反序列化、模板导入导出）
     implementation("com.google.code.gson:gson:2.10.1")
+
+    // JUnit 5 测试框架
+    testImplementation("org.junit.jupiter:junit-jupiter:5.10.2")
 }
 intellijPlatform {
     pluginConfiguration {
