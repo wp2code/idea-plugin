@@ -11,6 +11,7 @@ import com.lsy.idea.model.MethodTypeEnum;
 import com.lsy.idea.model.SqlTemplate;
 import com.lsy.idea.ui.renderer.CodeModeCellEditor;
 import com.lsy.idea.ui.renderer.CodeModeCellRenderer;
+import com.lsy.idea.util.CommUtil;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -118,21 +119,14 @@ public class InterfaceListTable extends JPanel {
         
         // 资源类型默认字典项：取列表第一项
         Integer defaultResourceType = (resourceTypes != null && !resourceTypes.isEmpty()) ? resourceTypes.getFirst().getTypeCode() : null;
-        // 权限类型默认字典项：取列表第一项
-        Integer defaultPermissionType = (permissionTypes != null && !permissionTypes.isEmpty()) ? permissionTypes.getFirst().getTypeCode() : null;
         final List<Integer> permissionTypeCodes =
                 permissionTypes == null ? new ArrayList<>() : permissionTypes.stream().map(DictItem::getTypeCode).toList();
         // 对资源类型和权限类型均为 null 的接口填充默认字典选项
         for (InterfaceInfo info : interfaces) {
             final String requestMethod = info.getRequestMethod();
             MethodTypeEnum methodType = MethodTypeEnum.getInstance(requestMethod);
-            if (MethodTypeEnum.DELETE == methodType && permissionTypeCodes.contains(3)) {
-                defaultPermissionType = 3;
-            } else if (MethodTypeEnum.PUT == methodType && permissionTypeCodes.contains(2)) {
-                defaultPermissionType = 2;
-            }
             info.initDefaultResourceType(defaultResourceType);
-            info.initDefaultPermissionType(defaultPermissionType);
+            info.initDefaultPermissionType(CommUtil.getDefaultPermissionType(info.getRoutePath(), methodType, permissionTypeCodes));
         }
         
         // 资源类型列下拉

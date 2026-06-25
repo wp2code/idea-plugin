@@ -2,6 +2,7 @@ package com.lsy.idea.util;
 
 import com.intellij.openapi.ui.Messages;
 import com.lsy.idea.http.HttpCodeFetcher;
+import com.lsy.idea.model.MethodTypeEnum;
 import com.lsy.idea.model.VariableInfo;
 import java.util.Arrays;
 import java.util.List;
@@ -23,6 +24,52 @@ public class CommUtil {
      * 默认权限类型列表
      */
     public static List<Integer> DEFAULT_PERMISSION_TYPES = Arrays.asList(0, 1, 2, 3, 4);
+    
+    public static List<String> ADD_PERMISSION_TYPES = Arrays.asList("add", "save", "create");
+    
+    public static List<String> EDIT_PERMISSION_TYPES = Arrays.asList("edit", "update", "modify");
+    
+    public static List<String> DELETE_PERMISSION_TYPES = Arrays.asList("delete", "remove");
+    
+    public static List<String> QUERY_PERMISSION_TYPES = Arrays.asList("query", "get");
+    
+    
+    /**
+     * 获取默认权限类型 (不一定准确)
+     *
+     * @param url                    请求地址
+     * @param methodType             请求方法类型
+     * @param allPermissionTypeCodes 所有权限类型代码
+     * @return 权限类型
+     */
+    public static Integer getDefaultPermissionType(String url, MethodTypeEnum methodType, List<Integer> allPermissionTypeCodes) {
+        Integer type = null;
+        if (MethodTypeEnum.DELETE == methodType) {
+            type = 3;
+        } else if (MethodTypeEnum.PUT == methodType) {
+            type = 2;
+        }
+        if (isContains(QUERY_PERMISSION_TYPES, url)) {
+            type = 0;
+        }
+        if (isContains(ADD_PERMISSION_TYPES, url)) {
+            type = 1;
+        }
+        if (isContains(EDIT_PERMISSION_TYPES, url)) {
+            type = 2;
+        }
+        if (isContains(DELETE_PERMISSION_TYPES, url)) {
+            type = 3;
+        }
+        if (allPermissionTypeCodes != null && !allPermissionTypeCodes.isEmpty()) {
+            if (type != null && allPermissionTypeCodes.contains(type)) {
+                return type;
+            }
+            return allPermissionTypeCodes.getFirst();
+        }
+        return null;
+    }
+    
     
     /**
      * 获取默认变量列表
@@ -80,5 +127,14 @@ public class CommUtil {
         } else {
             Messages.showInfoMessage(jComponent, "测试结果：" + res, "成功");
         }
+    }
+    
+    private static boolean isContains(List<String> list, String url) {
+        for (final String s : list) {
+            if (url.contains(s)) {
+                return true;
+            }
+        }
+        return false;
     }
 }
