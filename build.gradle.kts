@@ -59,6 +59,10 @@ intellijPlatform {
             recommended()
         }
     }
+
+    publishing {
+        token = System.getenv("PUBLISH_TOKEN")
+    }
 }
 
 java {

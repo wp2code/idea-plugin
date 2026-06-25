@@ -35,7 +35,7 @@ jobs:
       - name: Publish plugin
         env:
           PUBLISH_TOKEN: ${{ secrets.JETBRAINS_PUBLISH_TOKEN }}
-        run: ./gradlew publishPlugin
+        run: ./gradlew publishPlugin --no-configuration-cache
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
