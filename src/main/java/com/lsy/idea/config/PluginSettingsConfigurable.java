@@ -142,13 +142,15 @@ public class PluginSettingsConfigurable implements Configurable {
         btnPanel.add(addBtn);
         btnPanel.add(Box.createVerticalStrut(4));
         btnPanel.add(importBtn);
-        //左边面板
+        //左边面板（右侧留白，避免与右面板贴在一起）
         JPanel leftPanel = new JPanel(new BorderLayout(4, 4));
+        leftPanel.setBorder(JBUI.Borders.emptyRight(JBUI.scale(8)));
         leftPanel.add(listScroll, BorderLayout.CENTER);
         leftPanel.add(btnPanel, BorderLayout.SOUTH);
-        //右边边面板
+        //右边边面板（左侧留白，与左面板形成间距）
         JPanel rightPanel = new JPanel(new BorderLayout(4, 0));
         rightPanel.setPreferredSize(new Dimension(400, 500));
+        rightPanel.setBorder(JBUI.Borders.emptyLeft(JBUI.scale(8)));
         JPanel formPanel = new JPanel(new GridBagLayout());
         JPanel optBtnPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 4, 2));
         optBtnPanel.add(saveBtn);
@@ -325,7 +327,7 @@ public class PluginSettingsConfigurable implements Configurable {
         };
         templateList.addListSelectionListener(selectionListener);
         rightPanel.add(new JBScrollPane(formPanel), BorderLayout.CENTER);
-        // ---- 分割面板（1px 主题色分割线，避免白色 3D 分隔条）----
+        // ---- 分割面板（1px 主题色分割线 + 两侧留白，避免白色 3D 分隔条且不贴边）----
         OnePixelSplitter splitPane = new OnePixelSplitter(false, 0.28f);
         splitPane.setFirstComponent(leftPanel);
         splitPane.setSecondComponent(rightPanel);
