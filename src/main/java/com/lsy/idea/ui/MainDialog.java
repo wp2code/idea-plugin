@@ -4,8 +4,12 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.ComboBox;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.Messages;
+import com.intellij.ui.IdeBorderFactory;
 import com.intellij.ui.JBColor;
+import com.intellij.ui.OnePixelSplitter;
 import com.intellij.ui.components.JBScrollPane;
+import com.intellij.util.ui.JBUI;
+import com.intellij.util.ui.UIUtil;
 import com.lsy.idea.db.DatabaseManager;
 import com.lsy.idea.db.DictDao;
 import com.lsy.idea.db.TemplateDao;
@@ -80,10 +84,12 @@ public class MainDialog extends DialogWrapper {
     
     @Override
     protected @Nullable JComponent createCenterPanel() {
-        JPanel root = new JPanel(new BorderLayout(6, 6));
+        JPanel root = new JPanel(new BorderLayout(JBUI.scale(6), JBUI.scale(6)));
         root.setMinimumSize(new Dimension(1100, 680));
         root.setPreferredSize(new Dimension(1100, 760));
-        root.setBorder(BorderFactory.createEmptyBorder(6, 6, 6, 6));
+        // 使用主题背景色，避免容器默认底色在深色主题下透出白色
+        root.setBackground(UIUtil.getPanelBackground());
+        root.setBorder(JBUI.Borders.empty(6));
         
         // ---- 上部：模板选择区 ----
         root.add(buildTemplateBar(), BorderLayout.NORTH);
@@ -94,14 +100,16 @@ public class MainDialog extends DialogWrapper {
         
         interfaceListTable = new InterfaceListTable(interfaces);
         interfaceListTable.setDictData(resourceTypes, permissionTypes);
-        interfaceListTable.setBorder(BorderFactory.createTitledBorder("接口配置列表"));
+        interfaceListTable.setBorder(IdeBorderFactory.createTitledBorder("接口配置列表"));
         
         // ---- 下部：SQL 预览区 ----
         JPanel previewPanel = buildPreviewPanel();
-        JSplitPane centerSplit = new JSplitPane(JSplitPane.VERTICAL_SPLIT, interfaceListTable, previewPanel);
-        centerSplit.setDividerSize(5);
-        centerSplit.setDividerLocation(320);
-        centerSplit.setBorder(null);
+        // 平台分割组件：分割线仅 1px 且使用主题边框色，避免 JSplitPane 默认的白色 3D 分隔条
+        OnePixelSplitter centerSplit = new OnePixelSplitter(true, 0.42f);
+        centerSplit.setFirstComponent(interfaceListTable);
+        centerSplit.setSecondComponent(previewPanel);
+        centerSplit.setShowDividerControls(false);
+        centerSplit.setHonorComponentsMinimumSize(true);
         root.add(centerSplit, BorderLayout.CENTER);
         loadTemplates();
         return root;
@@ -110,8 +118,9 @@ public class MainDialog extends DialogWrapper {
     // ===================== 模板选择区 =====================
     
     private JPanel buildTemplateBar() {
-        JPanel bar = new JPanel(new FlowLayout(FlowLayout.LEFT, 6, 4));
-        bar.setBorder(BorderFactory.createTitledBorder("模板配置"));
+        JPanel bar = new JPanel(new FlowLayout(FlowLayout.LEFT, JBUI.scale(6), JBUI.scale(4)));
+        bar.setOpaque(false);
+        bar.setBorder(IdeBorderFactory.createTitledBorder("模板配置"));
         
         bar.add(new JLabel("选择模板："));
         
@@ -135,11 +144,13 @@ public class MainDialog extends DialogWrapper {
     // ===================== SQL 预览区 =====================
     
     private JPanel buildPreviewPanel() {
-        JPanel panel = new JPanel(new BorderLayout(4, 4));
-        panel.setBorder(BorderFactory.createTitledBorder("SQL 预览"));
+        JPanel panel = new JPanel(new BorderLayout(JBUI.scale(4), JBUI.scale(4)));
+        panel.setOpaque(false);
+        panel.setBorder(IdeBorderFactory.createTitledBorder("SQL 预览"));
         
         warningLabel = new JLabel();
-        warningLabel.setForeground(new JBColor(JBColor.YELLOW, JBColor.YELLOW));
+        // 警告文字按主题区分明暗色，避免浅色主题下黄字不可读
+        warningLabel.setForeground(new JBColor(new Color(0xB36B00), new Color(0xFFC66D)));
         warningLabel.setVisible(false);
         panel.add(warningLabel, BorderLayout.NORTH);
         
@@ -147,11 +158,16 @@ public class MainDialog extends DialogWrapper {
         sqlPreviewArea.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 12));
         sqlPreviewArea.setEditable(false);
         sqlPreviewArea.setLineWrap(false);
+        // 跟随主题的文本区配色，避免深色主题下出现白色底块
+        sqlPreviewArea.setBackground(UIUtil.getTextFieldBackground());
+        sqlPreviewArea.setForeground(UIUtil.getLabelForeground());
+        sqlPreviewArea.setCaretColor(UIUtil.getLabelForeground());
         JBScrollPane scroll = new JBScrollPane(sqlPreviewArea);
         scroll.setPreferredSize(new Dimension(800, 160));
         panel.add(scroll, BorderLayout.CENTER);
         
-        JPanel btnRow = new JPanel(new FlowLayout(FlowLayout.LEFT, 6, 2));
+        JPanel btnRow = new JPanel(new FlowLayout(FlowLayout.LEFT, JBUI.scale(6), JBUI.scale(2)));
+        btnRow.setOpaque(false);
         
         JButton generateBtn = new JButton("生成脚本");
         generateBtn.setFont(generateBtn.getFont().deriveFont(Font.BOLD));

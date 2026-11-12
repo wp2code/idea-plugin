@@ -4,6 +4,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.ui.Gray;
+import com.intellij.ui.IdeBorderFactory;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.ui.table.JBTable;
@@ -78,7 +79,7 @@ public class DictManageDialog extends DialogWrapper {
     
     private JPanel buildTablePanel() {
         JPanel panel = new JPanel(new BorderLayout(4, 4));
-        panel.setBorder(BorderFactory.createTitledBorder(typeName + "列表"));
+        panel.setBorder(IdeBorderFactory.createTitledBorder(typeName + "列表"));
         
         tableModel = new DictTableModel(loadItems());
         table = new JBTable(tableModel);
@@ -130,7 +131,7 @@ public class DictManageDialog extends DialogWrapper {
         
         // 表单字段
         JPanel fields = new JPanel(new GridBagLayout());
-        fields.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createEtchedBorder(), BorderFactory.createEmptyBorder(8, 10, 8, 10)));
+        fields.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(JBColor.border()), JBUI.Borders.empty(8, 10)));
         GridBagConstraints lc = new GridBagConstraints();
         lc.anchor = GridBagConstraints.WEST;
         lc.insets = JBUI.insets(5, 0, 5, 6);

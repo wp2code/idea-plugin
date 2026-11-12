@@ -2,8 +2,11 @@ package com.lsy.idea.ui;
 
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.Messages;
+import com.intellij.ui.IdeBorderFactory;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.components.JBScrollPane;
+import com.intellij.ui.table.JBTable;
+import com.intellij.util.ui.UIUtil;
 import com.lsy.idea.generator.SqlGenerator;
 import com.lsy.idea.model.SqlTemplate;
 import com.lsy.idea.model.VariableInfo;
@@ -132,7 +135,7 @@ public class TemplateEditDialog extends DialogWrapper {
         httpApiRow.add(testHttpBtn, BorderLayout.EAST);
         httpHeadersPanel = new HttpHeadersPanel();
         JPanel httpConfigGroup = new JPanel(new BorderLayout(0, 4));
-        httpConfigGroup.setBorder(BorderFactory.createTitledBorder("HTTP 配置"));
+        httpConfigGroup.setBorder(IdeBorderFactory.createTitledBorder("HTTP 配置"));
         httpConfigGroup.add(httpApiRow, BorderLayout.NORTH);
         httpConfigGroup.add(httpHeadersPanel, BorderLayout.CENTER);
         testHttpBtn.addActionListener(
@@ -162,6 +165,10 @@ public class TemplateEditDialog extends DialogWrapper {
         contentArea = new JTextArea(10, 40);
         contentArea.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 12));
         contentArea.setLineWrap(false);
+        // 跟随主题的文本区配色，避免深色主题下出现白色底块
+        contentArea.setBackground(UIUtil.getTextFieldBackground());
+        contentArea.setForeground(UIUtil.getLabelForeground());
+        contentArea.setCaretColor(UIUtil.getLabelForeground());
         JBScrollPane contentScroll = new JBScrollPane(contentArea);
         fieldsPanel.add(contentScroll, gbc);
         row++;
@@ -218,7 +225,7 @@ public class TemplateEditDialog extends DialogWrapper {
                         };
                     }
                 };
-                JScrollPane scrollPane = new JScrollPane(new JTable(tableModel));
+                JBScrollPane scrollPane = new JBScrollPane(new JBTable(tableModel));
                 scrollPane.setPreferredSize(new Dimension(500, 300));
                 JOptionPane.showMessageDialog(getContentPanel(), scrollPane, "变量说明", JOptionPane.INFORMATION_MESSAGE);
             }

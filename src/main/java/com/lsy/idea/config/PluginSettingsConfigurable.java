@@ -5,12 +5,15 @@ import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.ui.Messages;
+import com.intellij.ui.IdeBorderFactory;
 import com.intellij.ui.JBColor;
+import com.intellij.ui.OnePixelSplitter;
 import com.intellij.ui.components.JBList;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.ui.components.JBTabbedPane;
 import com.intellij.ui.table.JBTable;
 import com.intellij.util.ui.JBUI;
+import com.intellij.util.ui.UIUtil;
 import com.lsy.idea.db.DatabaseManager;
 import com.lsy.idea.db.DictDao;
 import com.lsy.idea.db.TemplateDao;
@@ -214,7 +217,7 @@ public class PluginSettingsConfigurable implements Configurable {
         httpApiRow.add(testHttpBtn, BorderLayout.EAST);
         httpHeadersPanel = new HttpHeadersPanel();
         httpConfigGroup = new JPanel(new BorderLayout(0, 0));
-        httpConfigGroup.setBorder(BorderFactory.createTitledBorder("HTTP 配置"));
+        httpConfigGroup.setBorder(IdeBorderFactory.createTitledBorder("HTTP 配置"));
         httpConfigGroup.add(httpApiRow, BorderLayout.NORTH);
         httpConfigGroup.add(httpHeadersPanel, BorderLayout.CENTER);
         //        httpConfigGroup.setPreferredSize(new Dimension(200, 300));
@@ -243,6 +246,10 @@ public class PluginSettingsConfigurable implements Configurable {
         templateContentArea = new JTextArea(8, 40);
         templateContentArea.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 13));
         templateContentArea.setLineWrap(false);
+        // 跟随主题的文本区配色，避免深色主题下出现白色底块
+        templateContentArea.setBackground(UIUtil.getTextFieldBackground());
+        templateContentArea.setForeground(UIUtil.getLabelForeground());
+        templateContentArea.setCaretColor(UIUtil.getLabelForeground());
         JBScrollPane contentScroll = new JBScrollPane(templateContentArea);
         contentScroll.setMinimumSize(new Dimension(300, 120));
         formPanel.add(contentScroll, gbc);
@@ -295,7 +302,7 @@ public class PluginSettingsConfigurable implements Configurable {
                         };
                     }
                 };
-                JBScrollPane scrollPane = new JBScrollPane(new JTable(tableModel));
+                JBScrollPane scrollPane = new JBScrollPane(new JBTable(tableModel));
                 scrollPane.setPreferredSize(new Dimension(500, 300));
                 JOptionPane.showMessageDialog(mainPanel, scrollPane, "变量说明", JOptionPane.INFORMATION_MESSAGE);
             }
@@ -318,10 +325,11 @@ public class PluginSettingsConfigurable implements Configurable {
         };
         templateList.addListSelectionListener(selectionListener);
         rightPanel.add(new JBScrollPane(formPanel), BorderLayout.CENTER);
-        // ---- 分割面板 ----
-        JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, leftPanel, rightPanel);
-        splitPane.setDividerLocation(150);
-        splitPane.setDividerSize(5);
+        // ---- 分割面板（1px 主题色分割线，避免白色 3D 分隔条）----
+        OnePixelSplitter splitPane = new OnePixelSplitter(false, 0.28f);
+        splitPane.setFirstComponent(leftPanel);
+        splitPane.setSecondComponent(rightPanel);
+        splitPane.setShowDividerControls(false);
         panel.add(splitPane, BorderLayout.CENTER);
         return panel;
     }

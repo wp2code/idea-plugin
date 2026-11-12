@@ -1,7 +1,9 @@
 package com.lsy.idea.ui;
 
+import com.intellij.ui.IdeBorderFactory;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.components.JBScrollPane;
+import com.intellij.ui.table.JBTable;
 import com.lsy.idea.model.SqlTemplate;
 import java.awt.*;
 import java.util.ArrayList;
@@ -30,7 +32,7 @@ public class ExtConfigPanel extends JPanel {
     
     public ExtConfigPanel() {
         setLayout(new BorderLayout());
-        setBorder(BorderFactory.createTitledBorder("扩展字段配置（可选）"));
+        setBorder(IdeBorderFactory.createTitledBorder("扩展字段配置（可选）"));
         buildUI();
     }
 
@@ -46,7 +48,7 @@ public class ExtConfigPanel extends JPanel {
 
         // 键值对表格
         extTableModel = new ExtTableModel();
-        extTable = new JTable(extTableModel);
+        extTable = new JBTable(extTableModel);
         extTable.setRowHeight(24);
         extTable.getColumnModel().getColumn(0).setPreferredWidth(150);
         extTable.getColumnModel().getColumn(1).setPreferredWidth(200);

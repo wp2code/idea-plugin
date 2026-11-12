@@ -1,5 +1,6 @@
 package com.lsy.idea.ui;
 
+import com.intellij.ui.IdeBorderFactory;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.ui.table.JBTable;
 import com.lsy.idea.model.SqlTemplate;
@@ -23,7 +24,7 @@ public class HttpHeadersPanel extends JPanel {
     
     public HttpHeadersPanel() {
         setLayout(new BorderLayout());
-        setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(), "请求头配置（可选）"));
+        setBorder(IdeBorderFactory.createTitledBorder("请求头配置（可选）"));
         buildUI();
     }
     
